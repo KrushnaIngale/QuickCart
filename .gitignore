@@ -1,0 +1,64 @@
+# ==========================================
+# System & Editor Files (Global)
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# ==========================================
+# Backend (FastAPI / Python)
+# ==========================================
+# Environments
+backend/.venv/
+backend/venv/
+backend/env/
+backend/ENV/
+backend/env.bak/
+backend/venv.bak/
+
+# Python caching & bytecode
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/.pytest_cache/
+backend/.mypy_cache/
+
+# Database files (Local SQLite or Docker mounts for testing)
+backend/*.db
+backend/*.sqlite3
+
+# Environment secrets
+backend/.env
+backend/secrets.json
+
+# ==========================================
+# Frontend (React / Vite / Node)
+# ==========================================
+# Dependencies
+frontend/node_modules/
+frontend/jspm_packages/
+
+# Build outputs
+frontend/dist/
+frontend/build/
+frontend/.next/          # Just in case you brought over references from the friend's repo
+frontend/out/
+
+# Vite/Log files
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.eslintcache
+frontend/.stylelintcache
+
+# Environment secrets
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
