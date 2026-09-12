@@ -8,7 +8,7 @@ import Loader from "../components/Loader";
 import HeaderSlider from "../components/HeaderSlider";
 import FeaturedProducts from "../components/FeaturedProduct";
 import Banner from "../components/Banner";
-import Newsletter from "../components/Newsletter";
+import Newsletter from "../components/NewsLetter";
 
 const Home = () => {
   const { products, loading } = useContext(AppContext);
