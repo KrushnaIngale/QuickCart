@@ -1,86 +1,86 @@
 import { createContext, useEffect, useState } from "react";
-
 import api from "../utils/api";
 
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
-
   const [cartItems, setCartItems] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // PRODUCTS
+  const [userData, setUserData] = useState(null);
 
   const getProducts = async () => {
     try {
-      const response = await api.get("/products/");
-
-      setProducts(response.data);
-    } catch (error) {
-      console.log(error);
+      const res = await api.get("/products/");
+      setProducts(res.data);
+    } catch (err) {
+      console.error(err);
     }
   };
-
-  // CART
 
   const getCartItems = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        return;
-      }
-
-      const response = await api.get("/cart/");
-
-      setCartItems(response.data);
-    } catch (error) {
-      console.log(error);
+      if (!token) return;
+      const res = await api.get("/cart/");
+      setCartItems(res.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  // AUTH
+  const getUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await api.get("/auth/me");
+      setUserData(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const checkAuth = () => {
     const token = localStorage.getItem("token");
-
     setIsLoggedIn(!!token);
+    return !!token;
   };
 
+  // Handle Google OAuth callback token in URL
   useEffect(() => {
-    const fetchData = async () => {
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromGoogle = params.get("token");
+    if (tokenFromGoogle) {
+      localStorage.setItem("token", tokenFromGoogle);
+      // Clean URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
+  useEffect(() => {
+    const init = async () => {
       setLoading(true);
-
+      const loggedIn = checkAuth();
       await getProducts();
-
-      await getCartItems();
-
-      checkAuth();
-
+      if (loggedIn) {
+        await getCartItems();
+        await getUserData();
+      }
       setLoading(false);
     };
-
-    fetchData();
+    init();
   }, []);
 
   const value = {
     products,
-
     cartItems,
-
     loading,
-
     isLoggedIn,
-
-    getCartItems,
-
-    setCartItems,
-
     setIsLoggedIn,
+    userData,
+    getCartItems,
+    setCartItems,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

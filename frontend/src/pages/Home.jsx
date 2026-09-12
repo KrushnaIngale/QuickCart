@@ -1,21 +1,26 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
 import Hero from "../components/Hero";
 import { useContext } from "react";
 
 import { AppContext } from "../context/AppContext";
 
-const Home = () => {
-  const { products } = useContext(AppContext)
+import Loader from "../components/Loader";
+import HeaderSlider from "../components/HeaderSlider";
+import FeaturedProducts from "../components/FeaturedProduct";
+import Banner from "../components/Banner";
+import Newsletter from "../components/Newsletter";
 
+const Home = () => {
+  const { products, loading } = useContext(AppContext);
+
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="min-h-screen bg-slate-100 p-10">
         <h1 className="text-4xl font-bold mb-10">SmartCart</h1>
-        <Hero />
+        <HeaderSlider />
         <div className="mt-20 flex justify-between items-center">
           <div>
             <p className="text-slate-500 uppercase tracking-[4px] text-sm">
@@ -30,6 +35,11 @@ const Home = () => {
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
+        <FeaturedProducts />
+
+        <Banner />
+
+        <Newsletter />
       </div>
     </div>
   );

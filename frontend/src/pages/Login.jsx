@@ -28,11 +28,11 @@ const Login = () => {
       );
 
       localStorage.setItem("token", response.data.access_token);
-      window.location.reload()
-
+      
       alert("Login Successful");
-
+      
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -62,6 +62,14 @@ const Login = () => {
 
         <button className="w-full bg-black text-white py-3 rounded-xl active:scale-95 transition">
           Login
+        </button>
+        <button
+          onClick={() => {
+            window.location.href = "http://127.0.0.1:8000/auth/google/login";
+          }}
+          className="w-full bg-white border border-slate-300 py-3 rounded-xl mt-5 hover:bg-slate-100 transition font-semibold"
+        >
+          Continue With Google
         </button>
       </form>
     </div>

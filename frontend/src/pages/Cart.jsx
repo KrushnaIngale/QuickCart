@@ -1,6 +1,10 @@
 import axios from "axios";
+import CartItem from "../components/CartItem";
+import OrderSummary from "../components/OrderSummary";
 
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -42,7 +46,7 @@ const Cart = () => {
           },
         },
       );
-
+      toast.success("Item Removed");
       getCartItems();
     } catch (error) {
       console.log(error);
@@ -61,7 +65,7 @@ const Cart = () => {
           },
         },
       );
-
+      toast.success("Updated Successfully");
       getCartItems();
     } catch (error) {
       console.log(error);
@@ -90,7 +94,7 @@ const Cart = () => {
         },
       );
 
-      alert("Order Placed Successfully");
+      toast.success("Order Placed Successfully");
 
       getCartItems();
     } catch (error) {
@@ -98,67 +102,45 @@ const Cart = () => {
     }
   };
 
+  if (cartItems.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center">
+        <h1 className="text-5xl font-black">Your Cart Is Empty</h1>
+
+        <p className="text-slate-500 mt-4">
+          Add some products to continue shopping
+        </p>
+        <Link
+          to="/products"
+          className="mt-8 bg-black text-white px-6 py-3 rounded-2xl"
+        >
+          Continue Shopping
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-100 p-10">
-      <h1 className="text-4xl font-bold mb-10">My Cart</h1>
+    <div className="max-w-7xl mx-auto px-6 py-16">
+      <h1 className="text-5xl font-black mb-14">Your Cart</h1>
 
-      <div className="space-y-5">
-        {cartItems.map((item) => (
-          <div
-            key={item.cart_id}
-            className="bg-white rounded-2xl shadow-md p-5 flex items-center gap-5"
-          >
-            <img
-              src={item.product.image}
-              alt=""
-              className="h-32 w-32 object-cover rounded-xl"
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* LEFT */}
+
+        <div className="lg:col-span-2 space-y-6">
+          {cartItems.map((item) => (
+            <CartItem
+              key={item.cart_id}
+              item={item}
+              updateQuantity={updateQuantity}
+              removeCartItem={removeCartItem}
             />
+          ))}
+        </div>
 
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold">{item.product.title}</h2>
+        {/* RIGHT */}
 
-              <p className="text-slate-500 mt-2">{item.product.category}</p>
-
-              <p className="mt-3 text-xl font-semibold">
-                ₹ {item.product.price}
-              </p>
-
-              <p className="mt-2">Quantity: {item.quantity}</p>
-            </div>
-            <div className="flex gap-3 mt-4">
-              <button
-                onClick={() => updateQuantity(item.cart_id, "decrease")}
-                className="bg-slate-200 h-10 px-4 py-2 rounded-lg"
-              >
-                -
-              </button>
-
-              <button
-                onClick={() => updateQuantity(item.cart_id, "increase")}
-                className="bg-slate-200 h-10 px-4 py-2 rounded-lg"
-              >
-                +
-              </button>
-
-              <button
-                onClick={() => removeCartItem(item.cart_id)}
-                className="bg-red-500 h-10 text-white px-4 py-2 rounded-lg"
-              >
-                Remove
-              </button>
-
-              <div className="mt-10 bg-white p-6 rounded-2xl shadow-md">
-                <h2 className="text-3xl font-bold">Total: ₹ {totalPrice}</h2>
-              </div>
-              <button
-                onClick={checkout}
-                className="mt-5 bg-black text-white px-8 py-4 rounded-xl"
-              >
-                Checkout
-              </button>
-            </div>
-          </div>
-        ))}
+        <OrderSummary cartItems={cartItems} checkout={checkout} />
       </div>
     </div>
   );

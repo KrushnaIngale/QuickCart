@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import toast from "react-hot-toast"
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -44,9 +44,9 @@ const ProductDetails = () => {
           },
         },
       );
+      
+      toast.success("Added To Cart")
       window.location.reload();
-
-      alert("Added To Cart");
     } catch (error) {
       console.log(error);
     }
